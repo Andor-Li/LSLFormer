@@ -439,6 +439,7 @@ if args.flag_test == 'test':
     plt.imshow(prediction_matrix, cmap=cmap, interpolation='nearest')
     plt.xticks([])
     plt.yticks([])
+    os.makedirs('prediction map', exist_ok=True)  # ensure the output directory exists
     plt.savefig(f'prediction map/lslf_{args.dataset}.png', bbox_inches='tight', pad_inches=0, transparent=True,dpi=300)
     plt.show()
 else:
