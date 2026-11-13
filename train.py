@@ -28,6 +28,13 @@ parser.add_argument('--weight_decay', type=float, default=5e-3, help='weight_dec
 parser.add_argument('--dim_reduction', choices=['h2m', 'var', 'kmeans','cor','pca','spa'], default='h2m')
 args = parser.parse_args()
 
+if args.dim_reduction != 'h2m':
+    raise NotImplementedError(
+        f"--dim_reduction={args.dim_reduction} is not implemented in this release. "
+        "Only the H2M front-end is wired into the model; the PCA/SPA/Cor/K-means "
+        "comparison in the paper was produced offline by swapping the front-end."
+    )
+
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(f"当前使用的设备：{device}")
 

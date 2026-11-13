@@ -59,7 +59,7 @@ LSLFormer is built around a single question: *can we keep the accuracy of cross-
 | Module | Location | Role |
 |:--|:--|:--|
 | `H2M` | `model.py` | Learnable spectral response functions (16 × 144), implemented as a normalised, clamped 1×1 convolution: `Clamp(Conv1×1(H) / Σθ, [0,1])`. |
-| `MCIE` | `model.py` | 1×1 compression → three channel groups with 1×1 / 3×3 / 5×5 kernels, progressively chained (`s2+Y1`, `s3+Y2`), GroupNorm + LeakyReLU, 1×1 fusion. |
+| `MCIE` | `model.py` | 1×1 compression → three channel groups with 1×1 / 3×3 / 5×5 kernels, progressively chained (`s2+Y1`, `s3+Y2`), GroupNorm + LeakyReLU, residual 1×1 fusion. |
 | `Attention` (SLA) | `model.py` | Spectral self-attention `QKᵀ/√d` concatenated with the LiDAR affinity `softmax(X_L X_Lᵀ/√d)`, mixed by a 1×1 conv over the 2-channel attention tensor, then applied to `V`. |
 | `Transformer` | `model.py` | 3 encoder stages; a 1×2 convolution fuses the current stage features with those of the previous stage. |
 | `CMSCLoss` | `loss.py` | Temperature-scaled cosine affinity of HSI and LiDAR features, aligned with `KLDivLoss` (`batchmean`, τ = 0.1). |
@@ -284,7 +284,7 @@ log/houston2013.pt    # checkpoint, saved whenever validation AA improves
 >
 > 💡 The CMSC weight is hard-coded as `0.01 * CMSCLoss(...)` in both the training and validation loops, matching λ = 0.01 in the paper.
 >
-> 💡 `--dim_reduction {h2m,var,kmeans,cor,pca,spa}` is **reserved**: only `h2m` is wired into the model. The PCA / SPA / Cor / K-means rows of the downsampling comparison were produced by swapping the front-end offline.
+> 💡 `--dim_reduction {h2m,var,kmeans,cor,pca,spa}` is **reserved**: only `h2m` is wired into the model, and any other value raises `NotImplementedError`. The PCA / SPA / Cor / K-means rows of the downsampling comparison were produced offline by swapping the front-end.
 
 ---
 
@@ -296,12 +296,8 @@ The released checkpoint `log/houston2013.pt` can be evaluated directly:
 python train.py --dataset houston2013 --flag_test test
 ```
 
-It reports OA / AA / κ together with a per-class classification report, and writes the full-scene prediction map to `prediction map/lslf_houston2013.png`. Expected output on the released checkpoint (Houston 2013):
+It reports OA / AA / κ together with a per-class classification report, and writes the full-scene prediction map to `prediction map/lslf_houston2013.png`.
 
-```text
-Final Test Results:
-Test OA: 0.9215 | AA: 0.9292 | Kappa: 0.9148
-```
 ---
 
 ## 📐 Metrics

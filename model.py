@@ -251,7 +251,6 @@ class MCIE(nn.Module):
         y3 = self.norm3(self.branch3(s3+y2))
 
         concat = torch.cat([y1, y2, y3], dim=1)
-        out = x1 + concat
-        out = self.fuse_conv(concat)
+        out = self.fuse_conv(x1 + concat)
         out = self.act(out)
         return out
