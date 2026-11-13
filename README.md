@@ -349,6 +349,6 @@ Copyright (c) 2026 Dian Li, Siyuan Hao, Cheng Fang, Yuanxin Ye
 
 ## 📬 Contact
 
-**Dian Li** — [alidnnn@163.com](mailto:alidnnn@163.com) · GitHub: [@Andor-Li](https://github.com/Andor-Li)
+**Dian Li** — [andorld@163.com](mailto:andorld@163.com) · GitHub: [@Andor-Li](https://github.com/Andor-Li)
 
 For questions about the code, please open an issue. For questions about the paper, feel free to reach out by email.
